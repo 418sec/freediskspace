@@ -10,11 +10,22 @@ exports.driveList = driveList;
 exports.detail = detail;
 
 function detail(drive, callback) {
-  if (arguments.length === 1) {
-    return detailPromise(drive)
-  } else {
-    detailCallback(drive, callback)
-  }
+  driveList(function(error, drives){
+    if (drives.includes(drive)) {
+      if (error) {
+        callback(error);
+        return;
+      }
+      if (arguments.length === 1) {
+        return detailPromise(drive)
+      } else {
+        detailCallback(drive, callback)
+      }
+    } else {
+      callback(error);
+      return;
+    }
+  })
 }
 
 function detailPromise(drive) {
